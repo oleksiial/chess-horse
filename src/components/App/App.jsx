@@ -1,12 +1,19 @@
 import './App.css';
 import React, { Component } from 'react';
-import Field from '../Field/Field';
-import Engine from '../../horseJumper';
+import Canvas from '../Canvas/Canvas';
+import { connect } from 'react-redux';
+import { nextMove, updateField, setPosition, run, stop } from '../../redux/actions/core';
 
 class App extends Component {
   constructor (props) {
     super(props);
-    this.engine = new Engine(8, 8, () => this.forceUpdate());
+    this.props.updateField();
+    this.props.setPosition(4, 4);
+  }
+
+  onClickNextMove = () => {
+    const {width, height, field, horse} = this.props;
+    this.props.nextMove(width, height, field, horse);
   }
 
   render() {
@@ -14,11 +21,38 @@ class App extends Component {
       <div className="app">
         <header>
           <span>Some fancy header</span>
+          <button onClick={this.onClickNextMove}>next move</button>
+          <button onClick={this.props.run}>run</button>
+          <button onClick={this.props.stop}>stop</button>
         </header>
-        <Field field={this.engine.field.field}/>
+        <Canvas
+          width={this.props.width}
+          height={this.props.height}
+          field={this.props.field}
+          horse={this.props.horse}
+        />
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    width: state.core.width,
+    height: state.core.height,
+    field: state.core.field,
+    horse: state.core.horse
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateField: () => dispatch(updateField()),
+    nextMove: (width, height, field, horse) => dispatch(nextMove(width, height, field, horse)),
+    setPosition: (i, j) => dispatch(setPosition(i, j)),
+    run: () => dispatch(run()),
+    stop: () => dispatch(stop())
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
