@@ -1,4 +1,4 @@
-import { NEXT_MOVE, UPDATE_FIELD, getDirections, RUN, STOP } from "../actions/core";
+import { NEXT_MOVE, getDirections, RUN, STOP, PREV_MOVE } from "../actions/core";
 
 const initialState = {
   width: 8,
@@ -6,7 +6,8 @@ const initialState = {
   field: Array(8).fill(null).map(()=>Array(8).fill(null)),
   horse: {i: -1, j: -1},
   isRunning: false,
-  journal: []
+  journal: [],
+  undo: 0
 };
 
 export default function (state = initialState, action) {
@@ -15,22 +16,37 @@ export default function (state = initialState, action) {
     return {...state, isRunning: true};
   case STOP:
     return {...state, isRunning: false};
-  case UPDATE_FIELD:
-    return {...state, field: updateField(state.width, state.height, state.field)};
   case NEXT_MOVE:
-    const field = state.field.map((sub, i) => sub.map((v, j) => {
-      return i === action.payload.i && j === action.payload.j
-        ? Infinity
-        : v
-    }));
-    const newField = updateField(state.width, state.height, field);
+    const newField = updateField(
+      state.width,
+      state.height,
+      state.field.map((sub, i) => sub.map((v, j) => {
+        return i === action.payload.i && j === action.payload.j
+          ? Infinity
+          : v
+      }))
+    );
     const horse = {i:action.payload.i, j:action.payload.j};
     return {
       ...state,
       field: newField,
       horse: horse,
-      journal: [...state.journal, {field:newField, horse: horse}]
-    }; 
+      journal: state.undo === 0 ? [...state.journal, {field:newField, horse: horse}] : state.journal,
+      undo: Math.max(0, state.undo - 1)
+    };
+  case PREV_MOVE:
+    console.log(state.journal.length, state.undo);
+    const prevState = state.journal[state.journal.length - state.undo - 2];
+    console.log(prevState);
+    if (prevState === undefined) {
+      return state;
+    }
+    return {
+      ...state,
+      field: prevState.field,
+      horse: prevState.horse,
+      undo: state.undo + 1
+    }
   default:
     return state;
   }

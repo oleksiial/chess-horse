@@ -2,12 +2,11 @@ import './App.css';
 import React, { Component } from 'react';
 import Canvas from '../Canvas/Canvas';
 import { connect } from 'react-redux';
-import { nextMove, updateField, setPosition, run, stop } from '../../redux/actions/core';
+import { nextMove, setPosition, run, stop, prevMove } from '../../redux/actions/core';
 
 class App extends Component {
   constructor (props) {
     super(props);
-    this.props.updateField();
     this.props.setPosition(4, 4);
   }
 
@@ -22,6 +21,7 @@ class App extends Component {
         <header>
           <span>Some fancy header</span>
           <button onClick={this.onClickNextMove}>next move</button>
+          <button onClick={this.props.prevMove}>prev move</button>
           <button onClick={this.props.run}>run</button>
           <button onClick={this.props.stop}>stop</button>
         </header>
@@ -47,8 +47,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateField: () => dispatch(updateField()),
     nextMove: (width, height, field, horse) => dispatch(nextMove(width, height, field, horse)),
+    prevMove: () => dispatch(prevMove()),
     setPosition: (i, j) => dispatch(setPosition(i, j)),
     run: () => dispatch(run()),
     stop: () => dispatch(stop())

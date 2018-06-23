@@ -1,5 +1,5 @@
 export const NEXT_MOVE = 'NEXT_MOVE';
-export const UPDATE_FIELD = 'UPDATE_FIELD';
+export const PREV_MOVE = 'PREV_MOVE';
 export const RUN = 'RUN';
 export const STOP = 'STOP';
 
@@ -30,6 +30,10 @@ export function nextMove(width, height, field, horse) {
   return {type: NEXT_MOVE, payload: {i: min.i, j: min.j}};
 }
 
+export function prevMove() {
+  return {type: PREV_MOVE};
+}
+
 export function setPosition (i, j) {
   return {type: NEXT_MOVE, payload: {i, j}};
 }
@@ -39,10 +43,6 @@ export function stop () {
     clearInterval(i);
   }
   return {type: STOP};
-}
-
-export function updateField () {
-  return {type: UPDATE_FIELD};
 }
 
 export function getDirections (i, j) {
