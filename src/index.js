@@ -10,9 +10,9 @@ const initialState = window.REDUX_INITIAL_STATE || {};
 const store = configureStore(initialState);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
-  , document.getElementById('root')
+	<Provider store={store}>
+		<App />
+	</Provider>
+	, document.getElementById('root')
 );
 registerServiceWorker();
