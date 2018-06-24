@@ -5,18 +5,20 @@ import PropTypes from 'prop-types';
 const propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  horse: PropTypes.shape({
-    i: PropTypes.number.isRequired,
-    j: PropTypes.number.isRequired
-  }).isRequired
+  journal: PropTypes.arrayOf(PropTypes.shape({
+    field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+    horse: PropTypes.shape({
+      i: PropTypes.number.isRequired,
+      j: PropTypes.number.isRequired
+    }).isRequired
+  })).isRequired
 };
 
 class Canvas extends Component {
   constructor (props) {
     super(props);
     this.canvas = React.createRef();
-    this.cellSize = 60;
+    this.cellSize = 50;
   }
 
   componentDidMount () {
@@ -32,20 +34,47 @@ class Canvas extends Component {
     ctx.font = "15px Arial";
     ctx.fillStyle = '#eee';
     ctx.fillRect(0,0, this.cellSize * this.props.width, this.cellSize * this.props.height);
-    ctx.fillStyle = '#393';
 
-    this.props.field.forEach((sub, i) => {
+    ctx.fillStyle = '#bbb';
+    for (const record of this.props.journal) {
+      ctx.fillRect(
+        record.horse.j * this.cellSize,
+        record.horse.i * this.cellSize,
+        this.cellSize,
+        this.cellSize
+      );
+    }
+
+    ctx.fillStyle = '#222'; 
+    ctx.beginPath();
+    ctx.moveTo(
+      this.props.journal[0].horse.j * this.cellSize + this.cellSize / 2,
+      this.props.journal[0].horse.i * this.cellSize + this.cellSize / 2
+    );
+    for (const record of this.props.journal) { 
+      ctx.lineTo(
+        record.horse.j * this.cellSize + this.cellSize / 2,
+        record.horse.i * this.cellSize + this.cellSize / 2
+      );
+    }
+    ctx.stroke();
+
+    const { field, horse } = this.props.journal[this.props.journal.length - 1];
+    ctx.fillStyle = '#393';
+    ctx.fillRect(
+      horse.j * this.cellSize,
+      horse.i * this.cellSize,
+      this.cellSize,
+      this.cellSize
+    );
+
+    ctx.fillStyle = '#000';
+    field.forEach((sub, i) => {
       sub.forEach((v, j) => {
-        ctx.fillText(v,j * this.cellSize, i * this.cellSize + 15);
-        // if (v === Infinity) {
-        //   ctx.fillRect(
-        //     j * this.cellSize,
-        //     i * this.cellSize,
-        //     this.cellSize,
-        //     this.cellSize);
-        // }
+        ctx.fillText(v, j * this.cellSize + this.cellSize / 2 - 4, i * this.cellSize + 15);
       });
     });
+
     this.drawGrid(ctx);
   }
 
