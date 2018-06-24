@@ -7,7 +7,7 @@ const propTypes = {
 	height: PropTypes.number.isRequired,
 	journal: PropTypes.arrayOf(PropTypes.shape({
 		field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-		horse: PropTypes.shape({
+		knight: PropTypes.shape({
 			i: PropTypes.number.isRequired,
 			j: PropTypes.number.isRequired
 		}).isRequired
@@ -18,7 +18,7 @@ class Canvas extends Component {
 	constructor (props) {
 		super(props);
 		this.canvas = React.createRef();
-		this.cellSize = 50;
+		this.cellSize = 20;
 	}
 
 	componentDidMount () {
@@ -38,8 +38,8 @@ class Canvas extends Component {
 		ctx.fillStyle = '#bbb';
 		for (const record of this.props.journal) {
 			ctx.fillRect(
-				record.horse.j * this.cellSize,
-				record.horse.i * this.cellSize,
+				record.knight.j * this.cellSize,
+				record.knight.i * this.cellSize,
 				this.cellSize,
 				this.cellSize
 			);
@@ -48,22 +48,22 @@ class Canvas extends Component {
 		ctx.fillStyle = '#222'; 
 		ctx.beginPath();
 		ctx.moveTo(
-			this.props.journal[0].horse.j * this.cellSize + this.cellSize / 2,
-			this.props.journal[0].horse.i * this.cellSize + this.cellSize / 2
+			this.props.journal[0].knight.j * this.cellSize + this.cellSize / 2,
+			this.props.journal[0].knight.i * this.cellSize + this.cellSize / 2
 		);
 		for (const record of this.props.journal) { 
 			ctx.lineTo(
-				record.horse.j * this.cellSize + this.cellSize / 2,
-				record.horse.i * this.cellSize + this.cellSize / 2
+				record.knight.j * this.cellSize + this.cellSize / 2,
+				record.knight.i * this.cellSize + this.cellSize / 2
 			);
 		}
 		ctx.stroke();
 
-		const { field, horse } = this.props.journal[this.props.journal.length - 1];
+		const { field, knight } = this.props.journal[this.props.journal.length - 1];
 		ctx.fillStyle = '#393';
 		ctx.fillRect(
-			horse.j * this.cellSize,
-			horse.i * this.cellSize,
+			knight.j * this.cellSize,
+			knight.i * this.cellSize,
 			this.cellSize,
 			this.cellSize
 		);

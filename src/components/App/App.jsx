@@ -9,13 +9,13 @@ const propTypes = {
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
 	field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-	horse: PropTypes.shape({
+	knight: PropTypes.shape({
 		i: PropTypes.number.isRequired,
 		j: PropTypes.number.isRequired
 	}).isRequired,
 	journal: PropTypes.arrayOf(PropTypes.shape({
 		field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-		horse: PropTypes.shape({
+		knight: PropTypes.shape({
 			i: PropTypes.number.isRequired,
 			j: PropTypes.number.isRequired
 		}).isRequired
@@ -36,8 +36,8 @@ class App extends Component {
 	}
 
 	onClickNextMove = () => {
-		const {width, height, field, horse} = this.props;
-		this.props.nextMove(width, height, field, horse);
+		const {width, height, field, knight} = this.props;
+		this.props.nextMove(width, height, field, knight);
 	}
 
 	render() {
@@ -70,7 +70,7 @@ const mapStateToProps = (state) => {
 		width: state.core.width,
 		height: state.core.height,
 		field: state.core.field,
-		horse: state.core.horse,
+		knight: state.core.knight,
 		journal: state.core.journal,
 		undo: state.core.undo
 	};
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		nextMove: (width, height, field, horse) => dispatch(nextMove(width, height, field, horse)),
+		nextMove: (width, height, field, knight) => dispatch(nextMove(width, height, field, knight)),
 		prevMove: () => dispatch(prevMove()),
 		setPosition: (i, j) => dispatch(setPosition(i, j)),
 		run: () => dispatch(run()),

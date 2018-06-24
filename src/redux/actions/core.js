@@ -9,9 +9,9 @@ export function run() {
 	return (dispatch, getState) => {
 		dispatch({type: RUN});
 		setInterval(() => {
-			const {width, height, field, horse} = getState().core;
-			if (possibleNextMove(width, height, field, horse)) {
-				dispatch(nextMove(width, height, field, horse));
+			const {width, height, field, knight} = getState().core;
+			if (possibleNextMove(width, height, field, knight)) {
+				dispatch(nextMove(width, height, field, knight));
 			} else {
 				dispatch(stop());
 			}
@@ -19,11 +19,11 @@ export function run() {
 	}
 }
 
-export function nextMove(width, height, field, horse) {
-	if (!possibleNextMove(width, height, field, horse)) {
+export function nextMove(width, height, field, knight) {
+	if (!possibleNextMove(width, height, field, knight)) {
 		return { type: null };
 	}
-	const directions = getDirections(horse.i, horse.j).map(d => {
+	const directions = getDirections(knight.i, knight.j).map(d => {
 		return {
 			i: d[0],
 			j: d[1],
@@ -69,8 +69,8 @@ export function getDirections (i, j) {
 	];
 }
 
-function possibleNextMove(width, height, field, horse) {
-	const directions = getDirections(horse.i, horse.j);
+function possibleNextMove(width, height, field, knight) {
+	const directions = getDirections(knight.i, knight.j);
 	let min = 9;
 	for (const d of directions) {
 		if (d[0] >= 0 && d[0] < height && d[1] >= 0 && d[1] < width) {

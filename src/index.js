@@ -3,7 +3,6 @@ import configureStore from './redux/configureStore';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
 
 const initialState = window.REDUX_INITIAL_STATE || {};
 
@@ -15,4 +14,3 @@ ReactDOM.render(
 	</Provider>
 	, document.getElementById('root')
 );
-registerServiceWorker();
