@@ -4,6 +4,11 @@ export const PREV_MOVE = 'PREV_MOVE';
 export const REDO = 'REDO';
 export const RUN = 'RUN';
 export const STOP = 'STOP';
+export const NEW_GAME = 'NEW_GAME';
+
+export function newGame () {
+	return { type: NEW_GAME };
+}
 
 export function run() {
 	return (dispatch, getState) => {
@@ -18,6 +23,10 @@ export function run() {
 			}
 		}, 150);
 	}
+}
+
+export function doNextMove(i, j) {
+	return { type: NEXT_MOVE, payload: { i, j } };
 }
 
 export function nextMove(width, height, field, knight) {
@@ -35,6 +44,16 @@ export function nextMove(width, height, field, knight) {
 	}).sort((lhs, rhs) => lhs.v > rhs.v);
 	const mins = directions.filter(v => v.v === directions[0].v);
 	const min = mins[Math.floor(Math.random() * mins.length)];
+
+	// const mins2 = mins.map(m => {
+	// 	return {
+	// 		...m,
+	// 		d: Math.min(Math.min(m.j, width - 1 - m.j), Math.min(m.i, height - 1 - m.i))
+	// 	}
+	// }).sort((lhs, rhs) => lhs.d > rhs.d);
+
+	// console.log(mins2);
+
 	return { type: NEXT_MOVE, payload: { i: min.i, j: min.j}};
 }
 

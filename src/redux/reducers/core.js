@@ -5,7 +5,8 @@ import {
 	RUN,
 	STOP,
 	PREV_MOVE,
-	REDO
+	REDO,
+	NEW_GAME
 } from '../actions/core';
 
 const initialWidth = 8;
@@ -17,20 +18,24 @@ const initialState = {
 	isRunning: false,
 	journal: [{
 		field: initializeField(initialWidth, initialHeight),
-		knight: { i: -1, j: -1 }
+		knight: { i: -10, j: -10 }
 	}],
-	undo: 0
+	undo: 0,
+	isNewGame: true
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+	case NEW_GAME:
+		return initialState;
 	case SET_POSITION: {
 		const knight = { i: action.payload.i, j: action.payload.j };
 		const { field } = state.journal[state.journal.length - state.undo - 1];
 		const newField = updateField(state.width, state.height, field.map(s => s.slice()), knight);
 		return {
 			...initialState,
-			journal: [{ field: newField, knight: knight }]
+			journal: [{ field: newField, knight: knight }],
+			isNewGame: false
 		};
 	}
 	case RUN:
@@ -38,14 +43,19 @@ export default function(state = initialState, action) {
 	case STOP:
 		return { ...state, isRunning: false };
 	case NEXT_MOVE: {
-		const knight = { i: action.payload.i, j: action.payload.j };
-		const { field } = state.journal[state.journal.length - state.undo - 1];
-		const newField = updateField(state.width, state.height, field.map(s => s.slice()), knight);
+		const { width, height, journal, undo } = state;
+		const { field, knight } = journal[journal.length - undo - 1];
+		const newKnight = { i: action.payload.i, j: action.payload.j };
+		if (!isThisMoveLegal(width, height, knight, newKnight)) {
+			return state;
+		}
+		
+		const newField = updateField(width, height, field.map(s => s.slice()), newKnight);
 		return {
 			...state,
 			journal: [
-				...state.journal.slice(0, state.journal.length - state.undo),
-				{ field: newField, knight: knight }
+				...journal.slice(0, journal.length - undo),
+				{ field: newField, knight: newKnight }
 			],
 			undo: 0
 		};
@@ -88,6 +98,15 @@ function initializeField(width, height) {
 			return count;
 		})
 	);
+}
+
+function isThisMoveLegal(width, height, knight, newKnight) {
+	const directions = getDirections(knight.i, knight.j);
+	return newKnight.i >= 0 &&
+		newKnight.i < height &&
+		newKnight.j >= 0 &&
+		newKnight.j < width &&
+		directions.some(d => d[0] === newKnight.i && d[1] === newKnight.j);
 }
 
 function updateField(width, height, field, knight) {

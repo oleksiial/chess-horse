@@ -11,7 +11,12 @@ const propTypes = {
 			i: PropTypes.number.isRequired,
 			j: PropTypes.number.isRequired
 		}).isRequired
-	})).isRequired
+	})).isRequired,
+	isNewGame: PropTypes.bool.isRequired,
+
+	setPosition: PropTypes.func.isRequired,
+	newGame: PropTypes.func.isRequired,
+	nextMove: PropTypes.func.isRequired
 };
 
 class Canvas extends Component {
@@ -27,6 +32,14 @@ class Canvas extends Component {
 
 	componentDidUpdate () {
 		this.updateCanvas();
+	}
+
+	onCellClick = (e) => {
+		const i = (e.clientY - this.canvas.current.offsetTop) / this.cellSize | 0;
+		const j = (e.clientX - this.canvas.current.offsetLeft) / this.cellSize | 0;
+		this.props.isNewGame
+			? this.props.setPosition(i, j)
+			: this.props.nextMove(i, j)
 	}
 
 	updateCanvas = () => {
@@ -97,6 +110,7 @@ class Canvas extends Component {
 		return (
 			<div className="field">
 				<canvas
+					onClick={this.onCellClick}
 					width={this.props.width * this.cellSize}
 					height={this.props.height * this.cellSize}
 					ref={this.canvas}
