@@ -8,11 +8,6 @@ import PropTypes from 'prop-types';
 const propTypes = {
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
-	field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-	knight: PropTypes.shape({
-		i: PropTypes.number.isRequired,
-		j: PropTypes.number.isRequired
-	}).isRequired,
 	journal: PropTypes.arrayOf(PropTypes.shape({
 		field: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
 		knight: PropTypes.shape({
@@ -36,7 +31,8 @@ class App extends Component {
 	}
 
 	onClickNextMove = () => {
-		const {width, height, field, knight} = this.props;
+		const {width, height, journal, undo} = this.props;
+		const {field, knight} = journal[journal.length - undo - 1];
 		this.props.nextMove(width, height, field, knight);
 	}
 
@@ -69,8 +65,6 @@ const mapStateToProps = (state) => {
 	return {
 		width: state.core.width,
 		height: state.core.height,
-		field: state.core.field,
-		knight: state.core.knight,
 		journal: state.core.journal,
 		undo: state.core.undo
 	};

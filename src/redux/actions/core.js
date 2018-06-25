@@ -9,7 +9,8 @@ export function run() {
 	return (dispatch, getState) => {
 		dispatch({type: RUN});
 		setInterval(() => {
-			const {width, height, field, knight} = getState().core;
+			const {width, height, journal, undo} = getState().core;
+			const {field, knight} = journal[journal.length - undo - 1];
 			if (possibleNextMove(width, height, field, knight)) {
 				dispatch(nextMove(width, height, field, knight));
 			} else {

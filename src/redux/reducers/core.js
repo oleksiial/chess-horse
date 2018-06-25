@@ -8,14 +8,12 @@ import {
 	REDO
 } from '../actions/core';
 
-const initialWidth = 50;
-const initialHeight = 50;
+const initialWidth = 8;
+const initialHeight = 8;
 
 const initialState = {
 	width: initialWidth,
 	height: initialHeight,
-	field: initializeField(initialWidth, initialHeight),
-	knight: { i: -1, j: -1 },
 	isRunning: false,
 	journal: [{
 		field: initializeField(initialWidth, initialHeight),
@@ -28,12 +26,11 @@ export default function(state = initialState, action) {
 	switch (action.type) {
 	case SET_POSITION: {
 		const knight = { i: action.payload.i, j: action.payload.j };
-		const field = updateField(state.width, state.height, state.field, knight);
+		const { field } = state.journal[state.journal.length - state.undo - 1];
+		const newField = updateField(state.width, state.height, field.map(s => s.slice()), knight);
 		return {
 			...initialState,
-			field: field,
-			knight: knight,
-			journal: [{ field: field, knight: knight }]
+			journal: [{ field: newField, knight: knight }]
 		};
 	}
 	case RUN:
@@ -42,14 +39,13 @@ export default function(state = initialState, action) {
 		return { ...state, isRunning: false };
 	case NEXT_MOVE: {
 		const knight = { i: action.payload.i, j: action.payload.j };
-		const field = updateField(state.width, state.height, state.field, knight);
+		const { field } = state.journal[state.journal.length - state.undo - 1];
+		const newField = updateField(state.width, state.height, field.map(s => s.slice()), knight);
 		return {
 			...state,
-			field: field,
-			knight: knight,
 			journal: [
 				...state.journal.slice(0, state.journal.length - state.undo),
-				{ field: field, knight: knight }
+				{ field: newField, knight: knight }
 			],
 			undo: 0
 		};
@@ -61,8 +57,6 @@ export default function(state = initialState, action) {
 		}
 		return {
 			...state,
-			field: prevState.field,
-			knight: prevState.knight,
 			undo: state.undo + 1
 		};
 	}
@@ -70,11 +64,8 @@ export default function(state = initialState, action) {
 		if (state.undo === 0) {
 			return state;
 		}
-		const { field, knight } = state.journal[state.journal.length - state.undo];
 		return {
 			...state,
-			field: field,
-			knight: knight,
 			undo: Math.max(0, state.undo - 1)
 		};
 	}

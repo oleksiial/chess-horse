@@ -18,7 +18,7 @@ class Canvas extends Component {
 	constructor (props) {
 		super(props);
 		this.canvas = React.createRef();
-		this.cellSize = 20;
+		this.cellSize = 40;
 	}
 
 	componentDidMount () {
