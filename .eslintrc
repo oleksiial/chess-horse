@@ -7,14 +7,12 @@
       "jsx": true
     }
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "globals": {
-    "window": false,
-    "document": false,
-    "setInterval": false,
-    "clearInterval": false,
-    "console": false
+  "env": {
+    "jest": true,
+    "browser": true,
+    "node": true
   },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
     "no-console": "warn",
     "indent": [2, "tab"],

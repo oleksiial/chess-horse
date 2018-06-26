@@ -12,7 +12,7 @@ import {
 const initialWidth = 8;
 const initialHeight = 8;
 
-const initialState = {
+export const initialState = {
 	width: initialWidth,
 	height: initialHeight,
 	isRunning: false,
@@ -84,7 +84,7 @@ export default function(state = initialState, action) {
 	}
 }
 
-function initializeField(width, height) {
+export function initializeField(width, height) {
 	const field = Array(height).fill(null).map(() => Array(width).fill(null));
 	return field.map((sub, i) =>
 		sub.map((v, j) => {
@@ -100,7 +100,7 @@ function initializeField(width, height) {
 	);
 }
 
-function isThisMoveLegal(width, height, knight, newKnight) {
+export function isThisMoveLegal(width, height, knight, newKnight) {
 	const directions = getDirections(knight.i, knight.j);
 	return newKnight.i >= 0 &&
 		newKnight.i < height &&
@@ -109,7 +109,7 @@ function isThisMoveLegal(width, height, knight, newKnight) {
 		directions.some(d => d[0] === newKnight.i && d[1] === newKnight.j);
 }
 
-function updateField(width, height, field, knight) {
+export function updateField(width, height, field, knight) {
 	const directions = getDirections(knight.i, knight.j);
 	field[knight.i][knight.j] = 9;
 	for (const d of directions) {
