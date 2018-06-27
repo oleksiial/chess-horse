@@ -89,7 +89,7 @@ export function getDirections (i, j) {
 	];
 }
 
-function possibleNextMove(width, height, field, knight) {
+export function possibleNextMove(width, height, field, knight) {
 	const directions = getDirections(knight.i, knight.j);
 	let min = 9;
 	for (const d of directions) {
