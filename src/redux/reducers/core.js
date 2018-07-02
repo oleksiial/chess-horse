@@ -9,8 +9,8 @@ import {
 	NEW_GAME
 } from '../actions/core';
 
-const initialWidth = 8;
-const initialHeight = 8;
+const initialWidth = 14;
+const initialHeight = 14;
 
 export const initialState = {
 	width: initialWidth,
